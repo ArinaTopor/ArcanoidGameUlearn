@@ -13,8 +13,8 @@ namespace Game2
     {
         public static ContentManager content; // загружает изображения
         public static SpriteBatch spriteBatch; // отрисовывает их
-
         public static MyKeyboard myKeyboard;
+
 
     }
 }

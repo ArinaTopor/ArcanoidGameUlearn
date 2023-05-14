@@ -9,8 +9,8 @@ namespace Game2
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public static float ScreenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        public static float ScreenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        public static int ScreenWidth = 800;
+        public static int ScreenHeight = 500;
         World world;
         public Game1()
         {
@@ -22,7 +22,9 @@ namespace Game2
         {
             // TODO: Add your initialization logic here
             IsMouseVisible = true;
-
+            _graphics.PreferredBackBufferWidth = ScreenWidth;
+            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            _graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -40,14 +42,14 @@ namespace Game2
         {
             
             Global.myKeyboard.Update();
-            world.Update();
+            world.Update(gameTime);
             Global.myKeyboard.UpdateOld();
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) // поток рисования
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightGreen);
             Global.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);           
             world.Draw();
             Global.spriteBatch.End();
