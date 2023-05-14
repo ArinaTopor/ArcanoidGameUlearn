@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +10,24 @@ namespace Game2
     public class World
     {
         public Hero hero;
+        public Ball ball;
         public World()
         {
-            hero = new Hero("Default", new Microsoft.Xna.Framework.Vector2(150, 300));
+            hero = new Hero("Default", new Vector2(100, 300));
+            ball = new Ball("Sprites/ball", new Vector2(100, 300 - hero.texture.Height));
+
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
-            hero.Update();
+            hero.Update(gameTime);
+            ball.Update(gameTime);
+            ball.HitSomething(hero);
         }
         public virtual void Draw()
         {
             hero.Draw();
+            ball.Draw();
         }
     }
 }

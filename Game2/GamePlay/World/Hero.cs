@@ -18,7 +18,7 @@ namespace Game2
         {
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             if (Global.myKeyboard.GetPress("A") && position.X > 50)
             {
@@ -55,7 +55,7 @@ namespace Game2
                 
             
 
-            base.Update();
+            base.Update(gameTime);
         }
         public override void Draw()
         {

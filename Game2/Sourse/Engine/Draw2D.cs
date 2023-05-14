@@ -12,18 +12,23 @@ namespace Game2
     {
         public Vector2 position, dims;
         public Texture2D texture;
+        public float speed;
+        public Vector2 direction;
+        public Rectangle scope;
+        
         public Draw2D(string nameTexture, Vector2 Position)
         {
             texture = Global.content.Load<Texture2D>(nameTexture);
             position = Position;
             dims = new Vector2(texture.Width, texture.Height);
-            
+            speed = 0;
+            scope = new Rectangle((int)(position.X), (int)position.Y, (int)dims.X, (int)dims.Y);
 
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
-
+            position += direction * speed;
         }
 
         public virtual void Draw()
