@@ -9,51 +9,119 @@ namespace Game2
 {
     public class Ball : Draw2D
     {
-        public bool Outside;
+        public bool IsHeroPushBall;
+        public float interpol = 0.1f;
         public Ball(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
-            Outside = false;
+            IsHeroPushBall = false;           
             speed = 4f;
             position = Position;
-            //direction.Normalize();
             direction = new Vector2(0, 0);
-            //direction.Normalize(); 
         }
+        public void Start()
+        {
+            direction = new Vector2(1, -1);
+            direction.Normalize();
+        }
+
         public override void Update(GameTime gameTime)
         {
-            BoundsMovement();
+            
             
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            position += speed * direction * deltaTime;
+            //if (!IsHeroPushBall)
+            //{
+            //    IsHeroPushBall = true;
+            //}
+
+            //if (IsHeroPushBall)
+            //{
+            //   // direction = new Vector2(-direction.X, -direction.Y);
+            //    if (direction.X == 0)
+            //        Start();
+            //    //position += speed * direction * deltaTime;
+            //    //position = Vector2.Lerp(position, position + direction, interpol);
+            //}
+
+            BoundsMovement();
+            
             base.Update(gameTime);
         }
         private void BoundsMovement()
         {
-
             if (position.X <= 0 || position.X >= Game1.ScreenWidth - texture.Width)
-            {
                 direction.X *= -1;
-            }
+            if (position.Y <= 0)
+                direction.Y *= -1;
+
+
+            //if (position.X + direction.X < 0
+            //     || position.X + texture.Width >= Game1.ScreenWidth)
+            //{
+            //    direction = new Vector2(-direction.X, direction.Y);
+
+            //}
+            //if (position.Y + texture.Height / 10 >= 0)
+            //{
+
+            //    direction = new Vector2(direction.X, -direction.Y);
+            //}
+            //if (position.Y + texture.Height / 2 >= Game1.ScreenHeight)
+            //{
+            //    // Если мяч достиг нижней границы окна, то удаляем его
+            //    // из игры
+            //    //direction.Y *= -1;
+            //    position = new Vector2(this.position.X, Game1.ScreenHeight + 100);
+            //}
+
+            scope.Location = position.ToPoint();
         }
         //private void StartPosition(Hero hero)
         //{
         //    position.X = hero.position.X + hero.texture.Width / 2 - texture.Width / 2;
-           
+
         //    position.Y = hero.position.Y + texture.Height * 2;
         //    direction = new Vector2(1, -1);
         //}
-        public void HitSomething(Hero hero)
+        public void HitWithHero(Hero hero)
         {
-            if (this.scope.Intersects(hero.scope))
+            scope.Location = position.ToPoint();
+            if (scope.Intersects(hero.scope))
             {
-                direction.Y -= 4f;
-                direction.X -= 4f;
-            }
+                //if(scope.Center.X <= hero.position.X + 2 *  hero.texture.Width / 3)
+                //{
+                //    direction = new Vector2(-direction.X, direction.Y);
+                //}
+                //else if(scope.Center.X >= hero.position.X + hero.texture.Width / 3)
+                //    direction = new Vector2(-direction.X, direction.Y);
+                //else
+                //{
+                if(!IsHeroPushBall)
+                {
+                    Start();
+                    IsHeroPushBall = true;
+                }
+                    direction.Y *= -1;
+                    //direction.Normalize();
+                //}
+               
 
+
+                
+            }
+            //scope.Location = position.ToPoint();
+        }
+        public void CollisionBrick(Brick brick)
+        {
+            if(scope.Intersects(brick.scope))
+            {
+                direction.Y *= -1;
+            }
         }
         public override void Draw()
         {
             base.Draw();
         }
+
     }
 }

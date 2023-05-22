@@ -9,8 +9,8 @@ namespace Game2
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public static int ScreenWidth = 800;
-        public static int ScreenHeight = 500;
+        public static int ScreenWidth = 1000;
+        public static int ScreenHeight = 600;
         World world;
         public Game1()
         {

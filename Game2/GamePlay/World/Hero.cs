@@ -20,13 +20,18 @@ namespace Game2
 
         public override void Update(GameTime gameTime)
         {
-            if (Global.myKeyboard.GetPress("A") && position.X > 50)
+            MovementHero();
+            base.Update(gameTime);
+        }
+        public void MovementHero()
+        {
+            if (Global.myKeyboard.GetPress("A") && position.X > this.texture.Width / 2)
             {
-                position = new Vector2(position.X - 1, position.Y);
+                position = new Vector2(position.X - velocity, position.Y);
             }
-            else if (Global.myKeyboard.GetPress("D") && position.X < 720)
+            else if (Global.myKeyboard.GetPress("D") && position.X < Game1.ScreenWidth - this.texture.Width / 2)
             {
-                position = new Vector2(position.X + 1, position.Y);
+                position = new Vector2(position.X + velocity, position.Y);
             }
             if (!isJump)
             {
@@ -52,10 +57,7 @@ namespace Game2
                     jump_count = 7;
                 }
             }
-                
-            
-
-            base.Update(gameTime);
+            scope.Location = position.ToPoint();
         }
         public override void Draw()
         {

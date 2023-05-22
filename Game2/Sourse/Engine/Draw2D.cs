@@ -34,7 +34,7 @@ namespace Game2
         public virtual void Draw()
         {
             if (texture != null)
-                Global.spriteBatch.Draw(texture, new Rectangle((int)(position.X), (int)position.Y, (int)dims.X, (int)dims.Y),
+                Global.spriteBatch.Draw(texture, new Rectangle((int)(position.X), (int)(position.Y), (int)dims.X, (int)dims.Y),
                     null, Color.White, 0f, new Vector2(texture.Bounds.Width/2, texture.Bounds.Height/2), new SpriteEffects(), 0); // 0 - гдубина слоя
 
         }
