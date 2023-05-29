@@ -15,6 +15,7 @@ namespace Game2
         public float speed;
         public Vector2 direction;
         public Rectangle scope;
+        public Color color = Color.White;
         
         public Draw2D(string nameTexture, Vector2 Position)
         {
@@ -28,14 +29,13 @@ namespace Game2
 
         public virtual void Update(GameTime gameTime)
         {
-            position += direction * speed;
         }
 
         public virtual void Draw()
         {
             if (texture != null)
-                Global.spriteBatch.Draw(texture, new Rectangle((int)(position.X), (int)(position.Y), (int)dims.X, (int)dims.Y),
-                    null, Color.White, 0f, new Vector2(texture.Bounds.Width/2, texture.Bounds.Height/2), new SpriteEffects(), 0); // 0 - гдубина слоя
+                Global.spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), dims.ToPoint()),
+                    null, color, 0f, new Vector2(0, 0), new SpriteEffects(), 0); // 0 - глубина слоя
 
         }
     }
