@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -18,15 +21,16 @@ namespace Game2
         public Ball ball1;
         public Ball ball2;
         public Ball ball3;
+        private Song song;
 
         public World()
         {
             Start();
-            hero = new Hero("Default", new Vector2(Game1.ScreenWidth / 4, Game1.ScreenHeight));
-            hero.position = new Vector2(Game1.ScreenWidth / 4, Game1.ScreenHeight - hero.texture.Height / 2 - bricks[0].texture.Height - 100);
+            hero = new Hero("Hero/Default", new Vector2(Game1.ScreenWidth / 4, Game1.ScreenHeight));
             ball1 = new Ball("Sprites/SmallBall", new Vector2(Game1.ScreenWidth / 4 - hero.texture.Width * 2, Game1.ScreenHeight - hero.texture.Height * 2f));
             ball2 = new Ball("Sprites/MiddleBall", new Vector2(Game1.ScreenWidth / 4, Game1.ScreenHeight - hero.texture.Height * 2.5f));
             ball3 = new Ball("Sprites/ball", new Vector2(Game1.ScreenWidth / 4 + hero.texture.Width * 2, Game1.ScreenHeight - hero.texture.Height * 2f));
+            song = Global.content.Load<Song>("Audio/Removal");
         }
 
         public virtual void Update(GameTime gameTime)
@@ -50,15 +54,6 @@ namespace Game2
                 {
                     hero.CollideWithLeft = true;
                 }
-
-                //if (intersection && hero.scope.Bottom == b.scope.Top && hero.isJump)
-                //{
-                //    hero.position.Y = b.position.Y + b.texture.Height;
-                //}
-                //else if (intersection && (hero.scope.Right <= b.scope.Left || hero.scope.Left <= b.scope.Right))
-                //{
-                //    //hero.direction.X = 0;
-                //}
             }
             if (!intersection && !hero.isJump)
             {
@@ -70,59 +65,38 @@ namespace Game2
             {
                 intersection = false;
             }
+            CollisionBallWithBrick();           
+        }
+
+        public void CollisionBallWithBrick()
+        {
             for (int i = 0; i < bricks.Count; i++)
             {
-                
+
                 var brick = bricks[i];
                 if (ball1.scope.Intersects(brick.scope))
                 {
                     bricks.RemoveAt(i);
                     ball1.CollisionBrick(brick);
-
+                    MediaPlayer.Play(song);
                     i--;
                 }
                 if (ball2.scope.Intersects(brick.scope))
                 {
                     bricks.RemoveAt(i);
                     ball2.CollisionBrick(brick);
-
+                    MediaPlayer.Play(song);
                     i--;
                 }
                 if (ball3.scope.Intersects(brick.scope))
                 {
                     bricks.RemoveAt(i);
                     ball3.CollisionBrick(brick);
+                    MediaPlayer.Play(song);
                     i--;
                 }
+                
             }
-            //foreach (var b in bricks)
-            //{
-            //    b.Update(gameTime);
-            //}
-            //for (int i = 0; i < bricks.Count; i++)
-            //{
-            //    var brick = bricks[i];
-            //    if (ball1.scope.Intersects(brick.scope))
-            //    {
-            //        bricks.RemoveAt(i);
-            //        ball1.CollisionBrick(brick);
-
-            //        i--;
-            //    }
-            //    if (ball2.scope.Intersects(brick.scope))
-            //    {
-            //        bricks.RemoveAt(i);
-            //        ball2.CollisionBrick(brick);
-
-            //        i--;
-            //    }
-            //    if (ball3.scope.Intersects(brick.scope))
-            //    {
-            //        bricks.RemoveAt(i);
-            //        ball3.CollisionBrick(brick);
-            //        i--;
-            //    }
-            //}
         }
         public virtual void Draw()
         {
@@ -130,6 +104,7 @@ namespace Game2
             ball1.Draw();
             ball2.Draw();
             ball3.Draw();
+
             foreach (Brick brick in bricks)
                 brick.Draw();
         }

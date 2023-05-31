@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Game2
     public class Hero : Draw2D
     {
         public bool isJump = false;
-        public float jump_count = 7f;
+        private float jump_count = 7f;
         private double lastTimeInSecond;
         private Vector2 heroVelocity;
         public bool collisionWithBrick = false;
@@ -21,10 +22,28 @@ namespace Game2
         public Rectangle LeftColl;
         public bool CollideWithRight = false;
         public bool CollideWithLeft = false;
+        public Texture2D currentFrame;
+        private int currLeft = 2;
+        private int currRight = 0;
+
+        private bool IsMovingRight = false;
+        private bool IsMovingLeft = false;
+        private double animationTimer;
+        private const float animationSpeed = 0.2f;
+        private Dictionary<int, Texture2D> animationSprite = new();
 
 
         public Hero(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
+            currentFrame = texture;
+            animationSprite = new Dictionary<int, Texture2D>
+            {
+                {0, Global.content.Load<Texture2D>("Hero/Default")},
+                {1, Global.content.Load<Texture2D>("Hero/RunRight") },
+                {2, Global.content.Load<Texture2D>("Hero/Run") },
+                {3, Global.content.Load<Texture2D>("Hero/RunToLeft") },
+                {4, Global.content.Load<Texture2D>("Hero/RunLeft") }
+            };
             speed = 100f;
             direction = new Vector2(1, 0);
         }
@@ -37,9 +56,28 @@ namespace Game2
             LeftColl = new Rectangle(scope.Location.X, scope.Location.Y, 10, scope.Height);
             RightColl = new Rectangle(scope.Location.X + scope.Width - 10, scope.Location.Y, 10, scope.Height);
             lastTimeInSecond = gameTime.ElapsedGameTime.TotalSeconds;
+            animationTimer += lastTimeInSecond;
             
             MovementHero(gameTime);
-            
+            //if (IsMovingLeft && animationTimer > animationSpeed)
+            //{
+            //    currLeft++;
+            //    texture = animationSprite[currLeft];
+            //    if (currLeft == 4)
+            //        currLeft = 2;
+            //    animationTimer = 0;
+            //}
+            //if (IsMovingRight && animationTimer > animationSpeed)
+            //{
+            //    currRight++;
+            //    texture = animationSprite[currRight];
+            //    if (currRight == 2)
+            //        currRight = 0;
+            //    animationTimer = 0;
+            //}
+            //else if(!IsMovingRight && !IsMovingLeft)
+            //    texture = animationSprite[0];
+
             base.Update(gameTime);
         }
         public void MovementHero(GameTime gameTime)
@@ -49,15 +87,36 @@ namespace Game2
             if (Global.myKeyboard.GetPress("A") && position.X > 0 && !CollideWithLeft)
             {
                 position -= heroVelocity;
+                IsMovingLeft = true;
+                if(animationTimer > animationSpeed)
+                {
+                    currLeft++;
+                    texture = animationSprite[currLeft];
+                    if (currLeft == 4)
+                        currLeft = 2;
+                    animationTimer = 0;
+                }
             }
             else if (Global.myKeyboard.GetPress("D") && position.X < Game1.ScreenWidth - texture.Width / 2 && !CollideWithRight)
             {
                 position += heroVelocity;
+                IsMovingRight = true;
+                if(animationTimer > animationSpeed)
+                {
+                    currRight++;
+                    texture = animationSprite[currRight];
+                    if (currRight == 2)
+                        currRight = 0;
+                    animationTimer = 0;
+                }
             }
             else
             {
+                texture = animationSprite[0];
                 CollideWithLeft = false;
                 CollideWithRight = false;
+                IsMovingLeft = false;
+                IsMovingRight = false;
             }
             if (!isJump)
             {
@@ -86,25 +145,6 @@ namespace Game2
             }
             scope.Location = position.ToPoint();
         }
-        //public void CollisionWithBrick()
-        //{
-        //    var bricks = World.bricks;
-        //    foreach (var brick in bricks)
-        //    {
-        //        if (scope.Intersects(brick.scope))
-        //        {
-        //            if (!isJump && scope.Bottom == brick.scope.Top)
-        //            {
-        //                position.Y += 10;
-        //                position.Y = position.Y > Game1.ScreenHeight - texture.Height ? position.Y - texture.Height : position.Y;
-        //            }
-        //            else if (scope.Right == brick.scope.Left || scope.Left == brick.scope.Right)
-        //            {
-        //                collisionWithBrick = true;
-        //            }
-        //        }
-        //    }
-        //}
         public override void Draw()
         {
             base.Draw();

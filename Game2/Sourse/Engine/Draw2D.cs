@@ -10,7 +10,7 @@ namespace Game2
 {
     public class Draw2D
     {
-        public Vector2 position, dims;
+        public Vector2 position, dims, frameSize;
         public Texture2D texture;
         public float speed;
         public Vector2 direction;
@@ -26,6 +26,7 @@ namespace Game2
             scope = new Rectangle((int)(position.X), (int)position.Y, (int)dims.X, (int)dims.Y);
 
         }
+
 
         public virtual void Update(GameTime gameTime)
         {

@@ -28,26 +28,18 @@ namespace Game2
 
         public override void Update(GameTime gameTime)
         {                     
-            elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if(elapsedTime >= 30 && elapsedTime <= 60)
-            {
-                accelarationRate = 1.1f;
-            }
-            if (elapsedTime > 60)
-            {
-                accelarationRate = 1.2f;
-            }
-            
+            elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;          
             HitWithHero(World.hero);
+            ChangeSpeed();
             BoundsMovement();
             position += direction * speed;
-
             base.Update(gameTime);
         }
         private void BoundsMovement()
         {
             if (position.X <= 0 || position.X >= Game1.ScreenWidth - texture.Width)
                 direction.X *= -accelarationRate;
+
             if (position.Y <= 0)
                 direction.Y *= -accelarationRate;
 
@@ -58,12 +50,27 @@ namespace Game2
             scope.Location = position.ToPoint();
             if (scope.Intersects(hero.scope))
             {
-                if(!IsHeroPushBall)
+                if (!IsHeroPushBall)
                 {
                     Start();
                     IsHeroPushBall = true;
                 }
-                    direction.Y *= -accelarationRate;   
+                direction.Y *= -accelarationRate;
+            }
+        }
+
+        public void ChangeSpeed()
+        {
+            if (IsHeroPushBall)
+            {
+                if (elapsedTime >= 30 && elapsedTime <= 60)
+                {
+                    accelarationRate = 1.1f;
+                }
+                if (elapsedTime > 60)
+                {
+                    accelarationRate = 1.2f;
+                }
             }
         }
         public void CollisionBrick(Brick brick)

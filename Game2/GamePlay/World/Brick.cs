@@ -10,7 +10,6 @@ namespace Game2
 {
     public class Brick : Draw2D
     {
-        //public Hero hero = World.hero;
         public Brick(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
             speed = 0;
@@ -22,9 +21,6 @@ namespace Game2
             {
                 World.hero.position.Y = position.Y - World.hero.texture.Height;
             }
-            
-
-
         }
 
         public override void Update(GameTime gameTime)
