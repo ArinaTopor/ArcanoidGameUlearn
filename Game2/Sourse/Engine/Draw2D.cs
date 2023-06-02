@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game2
 {
-    public class Draw2D
+    public abstract class Draw2D
     {
         public Vector2 position, dims, frameSize;
         public Texture2D texture;
@@ -24,12 +24,11 @@ namespace Game2
             dims = new Vector2(texture.Width, texture.Height);
             speed = 0;
             scope = new Rectangle((int)(position.X), (int)position.Y, (int)dims.X, (int)dims.Y);
-
         }
-
 
         public virtual void Update(GameTime gameTime)
         {
+
         }
 
         public virtual void Draw()
@@ -37,7 +36,6 @@ namespace Game2
             if (texture != null)
                 Global.spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), dims.ToPoint()),
                     null, color, 0f, new Vector2(0, 0), new SpriteEffects(), 0); // 0 - глубина слоя
-
         }
     }
 }

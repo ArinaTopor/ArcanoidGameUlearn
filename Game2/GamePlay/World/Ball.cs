@@ -9,14 +9,15 @@ namespace Game2
 {
     public class Ball : Draw2D
     {
-        private float elapsedTime = 0;
+        private double elapsedTime = 0;
         private bool IsHeroPushBall;
-        private float accelarationRate = 1f;
+        private readonly float accelarationRate = 1f;
+
         
         public Ball(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
             IsHeroPushBall = false;           
-            speed = 4f;
+            speed = 150f;
             position = Position;
             direction = new Vector2(0, 0);
         }
@@ -25,25 +26,29 @@ namespace Game2
             direction = new Vector2(1, -1);
             direction.Normalize();
         }
-
+        
         public override void Update(GameTime gameTime)
         {                     
-            elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;          
+            elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+           
             HitWithHero(World.hero);
-            ChangeSpeed();
             BoundsMovement();
-            position += direction * speed;
+            position += direction * (float)elapsedTime * speed;
             base.Update(gameTime);
         }
         private void BoundsMovement()
         {
             if (position.X <= 0 || position.X >= Game1.ScreenWidth - texture.Width)
+            {
                 direction.X *= -accelarationRate;
+            }
 
-            if (position.Y <= 0)
+            else if (position.Y <= 0)
+            {
                 direction.Y *= -accelarationRate;
-
+            }
             scope.Location = position.ToPoint();
+
         }
         public void HitWithHero(Hero hero)
         {
@@ -57,33 +62,19 @@ namespace Game2
                 }
                 direction.Y *= -accelarationRate;
             }
-        }
+        }     
 
-        public void ChangeSpeed()
-        {
-            if (IsHeroPushBall)
-            {
-                if (elapsedTime >= 30 && elapsedTime <= 60)
-                {
-                    accelarationRate = 1.1f;
-                }
-                if (elapsedTime > 60)
-                {
-                    accelarationRate = 1.2f;
-                }
-            }
-        }
         public void CollisionBrick(Brick brick)
         {
-            if(scope.Intersects(brick.scope))
+            if (scope.Intersects(brick.scope))
             {
-                direction.Y *= -1;
+                direction.Y *= -accelarationRate;
             }
         }
+
         public override void Draw()
         {
             base.Draw();
         }
-
     }
 }
