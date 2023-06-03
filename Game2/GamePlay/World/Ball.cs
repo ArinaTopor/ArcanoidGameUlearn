@@ -9,11 +9,15 @@ namespace Game2
 {
     public class Ball : Draw2D
     {
-        private double elapsedTime = 0;
+        private double deltaTime = 0;
         private bool IsHeroPushBall;
         private readonly float accelarationRate = 1f;
+        //private float airResistance = 0.1f;
+        //private Vector2 airForce;
+        //private Vector2 accelaration;
+        //public float mass = 3;
 
-        
+
         public Ball(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
             IsHeroPushBall = false;           
@@ -29,11 +33,16 @@ namespace Game2
         
         public override void Update(GameTime gameTime)
         {                     
-            elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+            deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
            
             HitWithHero(World.hero);
             BoundsMovement();
-            position += direction * (float)elapsedTime * speed;
+            //Сопротивление воздуха
+            //airForce = -airResistance * direction;
+            //accelaration = airForce / mass;
+            //direction += accelaration * (float)deltaTime;
+            position += direction * (float)deltaTime * speed;
+
             base.Update(gameTime);
         }
         private void BoundsMovement()
