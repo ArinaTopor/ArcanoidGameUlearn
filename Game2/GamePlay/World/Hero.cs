@@ -13,13 +13,13 @@ namespace Game2
     {
         public bool isJump = false;
         public bool collisionWithBrick = false;
-        public Rectangle RightColl;
-        public Rectangle LeftColl;
-        public Rectangle Shoe;
+        public Rectangle RightColl { get; private set; }
+        public Rectangle LeftColl { get; private set; }
+        public Rectangle Shoe { get; private set; }
         public bool CollideWithRight = false;
         public bool CollideWithLeft = false;
         public Texture2D currentFrame;
-        private float jump_count = 7f;
+        private float jump_count = 8f;
         private double lastTimeInSecond;
         private Vector2 heroVelocity;    
         private int currLeft = 2;
@@ -28,10 +28,8 @@ namespace Game2
         private const float animationSpeed = 0.2f;
         private Dictionary<int, Texture2D> animationSprite = new();
 
-
         public Hero(string nameTexture, Vector2 Position) : base(nameTexture, Position)
         {
-            currentFrame = texture;
             animationSprite = new Dictionary<int, Texture2D>
             {
                 {0, Global.content.Load<Texture2D>("Hero/Default")},
@@ -44,7 +42,6 @@ namespace Game2
             direction = new Vector2(1, 0);
         }
             
-
         public override void Update(GameTime gameTime)
         {
             LeftColl = new Rectangle(scope.Location.X, scope.Location.Y, 10, texture.Height - 50);
@@ -52,11 +49,11 @@ namespace Game2
             Shoe = new Rectangle(scope.Location.X + 10, scope.Location.Y + texture.Height - 10, texture.Width - 20, 10);
             lastTimeInSecond = gameTime.ElapsedGameTime.TotalSeconds;
             animationTimer += lastTimeInSecond;           
-            MovementHero(gameTime);
+            MovementHero();
             base.Update(gameTime);
         }
 
-        public void MovementHero(GameTime gameTime)
+        public void MovementHero()
         {
             heroVelocity = direction * speed * (float)lastTimeInSecond;
 
@@ -101,7 +98,7 @@ namespace Game2
 
             else
             {
-                if (jump_count >= -7)
+                if (jump_count >= -8)
                 {
                     if (jump_count > 0)
                         position.Y -=(jump_count * jump_count / 2);
@@ -116,7 +113,7 @@ namespace Game2
                 else
                 {
                     isJump = false;
-                    jump_count = 7;
+                    jump_count = 8;
                 }
             }
             scope.Location = position.ToPoint();

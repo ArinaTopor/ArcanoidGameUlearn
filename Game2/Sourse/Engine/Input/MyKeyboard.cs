@@ -9,8 +9,10 @@ namespace Game2
 {
     public class MyKeyboard
     {
-        public static KeyboardState newKeyboard, oldKeyboard;
-        public static List<MyKey> pressedKeys = new(), previousPressedKeys = new();
+        private static KeyboardState newKeyboard;
+        private static readonly List<MyKey> pressedKeys = new();
+        private static readonly List<MyKey> previousPressedKeys = new();
+
         public virtual void Update()
         {
             newKeyboard = Keyboard.GetState();
@@ -19,7 +21,6 @@ namespace Game2
 
         public static void UpdateOld()
         {
-            oldKeyboard = newKeyboard;
             for(int i = 0; i < pressedKeys.Count; i++)
                 previousPressedKeys.Add(pressedKeys[i]);
         }

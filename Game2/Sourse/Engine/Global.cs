@@ -11,10 +11,8 @@ namespace Game2
 {
     class Global
     {
-        public static ContentManager content; // загружает изображения
-        public static SpriteBatch spriteBatch; // отрисовывает их
+        public static ContentManager content;
+        public static SpriteBatch spriteBatch;
         public static MyKeyboard myKeyboard; 
-
-
     }
 }

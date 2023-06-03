@@ -49,7 +49,7 @@ namespace Game2
             if (!intersection && !hero.isJump)
             {
                 hero.position.Y += 5;
-                hero.position.Y = hero.position.Y > Game1.ScreenHeight - hero.texture.Height ? Game1.ScreenHeight - hero.texture.Height: hero.position.Y;
+                hero.position.Y = hero.position.Y > Game1.ScreenHeight - hero.texture.Height ? Game1.ScreenHeight - hero.texture.Height : hero.position.Y;
             }
 
             else
@@ -73,6 +73,7 @@ namespace Game2
                         ball.CollisionBrick(brick);
                         MediaPlayer.Play(song);
                         i--;
+                        break;
                     }
                 }
             }

@@ -20,7 +20,7 @@ namespace Game2
             speed = 0;
         }
         
-        public void CollisionWithBrick()
+        public void CollisionWithBrickForJump()
         {
             if(World.hero.Shoe.Intersects(scope) )
             {
@@ -48,7 +48,7 @@ namespace Game2
 
         public override void Update(GameTime gameTime)
         {
-            CollisionWithBrick();
+            CollisionWithBrickForJump();
             base.Update(gameTime);
         }
 
