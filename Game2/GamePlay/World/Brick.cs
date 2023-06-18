@@ -22,7 +22,7 @@ namespace Game2
         
         public void CollisionWithBrickForJump()
         {
-            if(World.hero.Shoe.Intersects(scope) )
+            if (World.hero.Shoe.Intersects(scope))
             {
                 World.hero.position.Y = position.Y - World.hero.texture.Height;
             }

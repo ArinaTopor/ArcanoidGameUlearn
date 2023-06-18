@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,9 @@ namespace Game2
         private double deltaTime = 0;
         private bool IsHeroPushBall;
         private readonly float accelarationRate = 1f;
-        //private float airResistance = 0.1f;
-        //private Vector2 airForce;
-        //private Vector2 accelaration;
-        //public float mass = 3;
+        private float rotationAngle;
+        private Vector2 ballPosition;
+        private Vector2 ballOrigin;
 
 
         public Ball(string nameTexture, Vector2 Position) : base(nameTexture, Position)
@@ -37,32 +37,35 @@ namespace Game2
            
             HitWithHero(World.hero);
             BoundsMovement();
-            //Сопротивление воздуха
-            //airForce = -airResistance * direction;
-            //accelaration = airForce / mass;
-            //direction += accelaration * (float)deltaTime;
-            position += direction * (float)deltaTime * speed;
+            float rotationSpeed = 0.1f;
+            rotationAngle += rotationSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            Matrix rotationMatrix = Matrix.CreateRotationZ(rotationAngle);
+
+            ballPosition = new Vector2(position.X, position.Y);
+            ballOrigin = new Vector2(texture.Width / 2, texture.Height / 2); 
+
+            position += direction * (float)deltaTime * speed;
+            UpdateScope();
             base.Update(gameTime);
         }
         private void BoundsMovement()
         {
-            if (position.X <= 0 || position.X >= Game1.ScreenWidth - texture.Width)
+            if (position.X - texture.Width / 2 <= 0 || position.X >= Game1.ScreenWidth - texture.Width / 2)
             {
                 direction.X *= -accelarationRate;
             }
 
-            else if (position.Y <= 0)
+            else if (position.Y - texture.Height/2 <= 0)
             {
                 direction.Y *= -accelarationRate;
             }
             scope.Location = position.ToPoint();
-
         }
         public void HitWithHero(Hero hero)
         {
             scope.Location = position.ToPoint();
-            if (scope.Intersects(hero.scope))
+            if (hero.scope.Intersects(scope))
             {
                 if (!IsHeroPushBall)
                 {
@@ -80,10 +83,32 @@ namespace Game2
                 direction.Y *= -accelarationRate;
             }
         }
-
-        public override void Draw()
+        private void UpdateScope()
         {
-            base.Draw();
+            Matrix transformMatrix = Matrix.CreateTranslation(new Vector3(-position, 0)) *
+                                Matrix.CreateRotationZ(rotationAngle) *
+                                Matrix.CreateTranslation(new Vector3(position, 0));
+            scope = CalculateTransformedBounds(transformMatrix, scope);
+        }
+        private Rectangle CalculateTransformedBounds(Matrix transformMatrix, Rectangle bounds)
+        {
+            Vector2[] corners = new Vector2[4];
+            corners[0] = new Vector2(bounds.Left, bounds.Top);
+            corners[1] = new Vector2(bounds.Right, bounds.Top);
+            corners[2] = new Vector2(bounds.Right, bounds.Bottom);
+            corners[3] = new Vector2(bounds.Left, bounds.Bottom);
+
+            Vector2.Transform(corners, ref transformMatrix, corners);
+            float minX = Math.Min(Math.Min(corners[0].X, corners[1].X), Math.Min(corners[2].X, corners[3].X));
+            float minY = Math.Min(Math.Min(corners[0].Y, corners[1].Y), Math.Min(corners[2].Y, corners[3].Y));
+
+            Rectangle transformedBounds = new((int)minX, (int)minY, texture.Width - 10, texture.Height - 10);
+            return transformedBounds;
+        }
+    
+    public override void Draw()
+        {
+            Global.spriteBatch.Draw(texture, ballPosition, null, Color.White, rotationAngle, ballOrigin, 1.0f, SpriteEffects.None, 0f);
         }
     }
 }
